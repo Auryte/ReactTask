@@ -5,7 +5,7 @@ import LocationContext from 'contexts/LocationContext';
 import React, { ChangeEvent, FC, useContext, useState } from 'react';
 import { VscSearch } from 'react-icons/vsc';
 import { isInputValid } from 'utils/stringCorrections';
-import styles from './styles.module.scss';
+import styles from './HeaderSearch.module.scss';
 
 const HeaderSearch: FC = () => {
   const { setCoordinates } = useContext(LocationContext);

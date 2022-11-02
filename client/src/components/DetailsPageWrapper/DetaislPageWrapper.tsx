@@ -4,7 +4,7 @@ import MainView from 'components/MainView/MainView';
 import useGetData from 'hooks/useGetData';
 import React, { FC } from 'react';
 import { GeolocationCoordinates, LocationData } from 'types';
-import styles from '../Loader/styles.module.scss';
+import styles from '../Loader/Loader.module.scss';
 
 type DetailsPageWrapperData = {
   locationData: LocationData | undefined;
