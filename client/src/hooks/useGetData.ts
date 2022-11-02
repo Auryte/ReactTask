@@ -1,9 +1,22 @@
-import LocationContext from 'contexts/LocationContext';
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { DailyWeather, HourlyWeather, LocationData, CurrentWeatherData } from 'types';
+import { useState, useEffect, useCallback } from 'react';
+import {
+  DailyWeather,
+  HourlyWeather,
+  LocationData,
+  CurrentWeatherData,
+  GeolocationCoordinates
+} from 'types';
 
-const useGetData = ({ getCurrentWeather, getDailyWeather, getHourlyWeather, getLocation }) => {
-  const { coordinates } = useContext(LocationContext);
+type UseGetData = {
+  getCurrentWeather: (coordinates: GeolocationCoordinates | null) => Promise<CurrentWeatherData>;
+  getDailyWeather: (coordinates: GeolocationCoordinates | null) => Promise<DailyWeather[]>;
+  getHourlyWeather: (coordinates: GeolocationCoordinates | null) => Promise<HourlyWeather[]>;
+  getLocation?: (coordinates: GeolocationCoordinates | null) => Promise<LocationData>;
+  coordinates: GeolocationCoordinates | null;
+};
+
+const useGetData = (params: UseGetData) => {
+  const { getCurrentWeather, getDailyWeather, getHourlyWeather, getLocation, coordinates } = params;
   const [currentWeather, setCurrentWeather] = useState<CurrentWeatherData | null>(null);
   const [locationData, setLocationData] = useState<LocationData | undefined>(undefined);
   const [forecast, setForecast] = useState<DailyWeather[] | undefined>([]);
@@ -13,12 +26,14 @@ const useGetData = ({ getCurrentWeather, getDailyWeather, getHourlyWeather, getL
 
   const getData = useCallback(async () => {
     try {
+      if (getLocation) {
+        const locationResult: LocationData = await getLocation(coordinates);
+        setLocationData(locationResult);
+      }
       const data: CurrentWeatherData = await getCurrentWeather(coordinates);
-      const locationResult: LocationData = await getLocation(coordinates);
       const dailyWeather: DailyWeather[] = await getDailyWeather(coordinates);
       const hourlyWeather: HourlyWeather[] = await getHourlyWeather(coordinates);
       setCurrentWeather(data);
-      setLocationData(locationResult);
       setForecast(dailyWeather);
       const first24Hours: HourlyWeather[] = hourlyWeather?.slice(0, 24);
       setHourlyForecast(first24Hours);

@@ -6,6 +6,7 @@ const useGetSearchRequest = (inputValue: string) => {
   const [searchData, setSearchData] = useState<LocationByQuery>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
+
   const getLocations = useCallback(async () => {
     try {
       const locationData = await getLocationByQuery(inputValue);

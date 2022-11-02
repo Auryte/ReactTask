@@ -31,7 +31,7 @@ const CurrentWeatherCard: FC<WeatherProps> = ({ weatherData, location }) => {
             <h5>Visibility {(weatherData.visibility * 0.001).toFixed(2)} km</h5>
             <h5>Humidity {weatherData.relHumidity} %</h5>
             <h5>Dew Point {weatherData.dewPoint}&deg;</h5>
-            <h5>Cloudines {weatherData.cloudiness}%</h5>
+            <h5>Cloudiness {weatherData.cloudiness}%</h5>
           </div>
         </div>
       )}

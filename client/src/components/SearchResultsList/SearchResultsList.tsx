@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { saveSearches } from 'redux/actionsSearch';
 import { prevSearchSelector } from 'redux/searchReducer';
-import { convertStringCharacters, formatNameForUrl } from 'utils/stringCorrections';
 import styles from './SearchResultsList.module.scss';
 
 const SearchResultslist = ({ inputValue, display, resultSelected }) => {
@@ -22,10 +21,10 @@ const SearchResultslist = ({ inputValue, display, resultSelected }) => {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       const target = event.target as HTMLAnchorElement;
-      const url = target.href.split('/')[3];
+      const location = target.href.split('/')[3];
       resultSelected();
-      navigate(`/details/${url}`);
-      dispatch(saveSearches(url));
+      navigate(`/details/${location}`);
+      dispatch(saveSearches(location));
       setSearchData(undefined);
     },
     [dispatch, navigate, resultSelected, setSearchData]
@@ -38,13 +37,11 @@ const SearchResultslist = ({ inputValue, display, resultSelected }) => {
       {isLoading ? (
         <Loader className="searchContainer" />
       ) : (
-        searchData?.locations?.slice(0, 10).map(({ lon, lat, id, name, country }) => {
-          const href = `${formatNameForUrl(name)}-${formatNameForUrl(country)}(${lon})-(${lat})`;
-          const url: string = convertStringCharacters(href);
+        searchData?.locations?.slice(0, 10).map(({ id, name, adminArea, country }) => {
           return (
             <li className={styles.listElement} key={id}>
-              <a href={url} className={styles.locationName} onMouseDown={handleClick}>
-                {name}, {country}
+              <a href={id.toString()} className={styles.locationName} onMouseDown={handleClick}>
+                {name}, {adminArea}, {country}
               </a>
             </li>
           );

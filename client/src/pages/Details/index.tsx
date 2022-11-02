@@ -1,52 +1,44 @@
-import { getCurrentWeather, getDailyWeather, getHourlyWeather, getLocation } from 'API/get';
-import LocationContext from 'contexts/LocationContext';
-import React, { useContext, useEffect } from 'react';
+import { getLocationById } from 'API/get';
+import React, { useEffect, useCallback, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader } from 'components/Loader/Loader';
-import MainView from 'components/MainView/MainView';
-import useGetData from 'hooks/useGetData';
-import { getCoordsFromString } from 'utils/getCoordsFromString';
-import styles from '../../components/Loader/styles.module.scss';
+import { GeolocationCoordinates, LocationData } from 'types';
+import DetaislPageWrapper from 'components/DetailsPageWrapper/DetaislPageWrapper';
+import LocationContext from 'contexts/LocationContext';
 
 const Details: React.FC = () => {
   const { setCoordinates, statusMsg } = useContext(LocationContext);
   const { location } = useParams();
+  const [locationData, setLocationData] = useState<LocationData | undefined>(undefined);
+  const [detailsCoords, setDetailsCoords] = useState<GeolocationCoordinates | null>(null);
 
-  useEffect(() => {
-    const getLocationData = async () => {
+  const getLocationData = useCallback(async () => {
+    try {
       if (location) {
-        const searchLocationCoords = getCoordsFromString(location);
-        setCoordinates(searchLocationCoords);
+        const searchLocationData = await getLocationById(location);
+        if (searchLocationData) {
+          const searchLocationCoords = {
+            lat: searchLocationData?.lat,
+            lon: searchLocationData?.lon
+          };
+          setLocationData(searchLocationData);
+          setCoordinates(searchLocationCoords);
+          setDetailsCoords(searchLocationCoords);
+        }
       }
-    };
-    getLocationData();
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }, [location, setCoordinates]);
 
-  const {
-    currentWeather,
-    locationData,
-    forecast,
-    errorMsg,
-    hourlyForecast,
-    setHourlyForecast,
-    isLoading
-  } = useGetData({ getCurrentWeather, getDailyWeather, getHourlyWeather, getLocation });
+  useEffect(() => {
+    getLocationData();
+  }, [getLocationData]);
 
-  if (isLoading) {
-    return statusMsg || errorMsg ? (
-      <div className={styles.loaderContainer}>{statusMsg || errorMsg}</div>
-    ) : (
-      <Loader />
-    );
-  }
   return (
-    <MainView
-      setHourlyForecast={setHourlyForecast}
-      statusMsg={statusMsg}
-      currentWeather={currentWeather}
+    <DetaislPageWrapper
       locationData={locationData}
-      forecast={forecast}
-      hourlyForecast={hourlyForecast}
+      statusMsg={statusMsg}
+      coordinates={detailsCoords}
     />
   );
 };

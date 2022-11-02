@@ -83,6 +83,15 @@ export const getLocation = async (param: GeolocationCoordinates | null): Promise
   }
 };
 
+export const getLocationById = async (param: string): Promise<LocationData> => {
+  try {
+    const result: AxiosResponse<LocationData> = await forecaClient.get(`/location/${param}`);
+    return result.data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
 export const getLocationByQuery = async (param: string | undefined): Promise<LocationByQuery> => {
   try {
     const result: AxiosResponse<LocationByQuery> = await forecaClient.get(

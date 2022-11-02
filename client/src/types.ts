@@ -4,6 +4,7 @@ export type GeolocationCoordinates = {
   lon: number;
   lat: number;
 };
+
 export type AuthenticationResponse = {
   // eslint-disable-next-line camelcase
   access_token: string;

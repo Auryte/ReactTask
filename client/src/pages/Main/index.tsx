@@ -7,7 +7,7 @@ import MainView from 'components/MainView/MainView';
 import styles from '../../components/Loader/styles.module.scss';
 
 const Main: FC = () => {
-  const { statusMsg } = useContext(LocationContext);
+  const { coordinates, statusMsg } = useContext(LocationContext);
 
   const {
     currentWeather,
@@ -17,7 +17,13 @@ const Main: FC = () => {
     setHourlyForecast,
     isLoading,
     errorMsg
-  } = useGetData({ getCurrentWeather, getDailyWeather, getHourlyWeather, getLocation });
+  } = useGetData({
+    getCurrentWeather,
+    getDailyWeather,
+    getHourlyWeather,
+    getLocation,
+    coordinates
+  });
 
   if (isLoading) {
     return statusMsg || errorMsg ? (

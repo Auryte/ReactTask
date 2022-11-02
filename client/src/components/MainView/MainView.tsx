@@ -9,8 +9,8 @@ import { getBackgroundImg } from 'utils/getImages';
 import styles from './MainView.module.scss';
 
 interface MainViewParams {
-  setHourlyForecast: (arg: HourlyWeather[] | undefined) => void;
-  statusMsg?: string | null;
+  setHourlyForecast?: (arg: HourlyWeather[] | undefined) => void;
+  statusMsg: string | null;
   currentWeather: CurrentWeatherData | null;
   locationData: LocationData | undefined;
   forecast: DailyWeather[] | undefined;
@@ -31,15 +31,17 @@ const MainView: FC<MainViewParams> = ({
   const ref = useRef<null | HTMLDivElement>(null);
 
   const onCardClick = async (index: number, date: string) => {
-    setHourlyForecast([]);
-    const hourlyWeather = await getHourlyWeather(coordinates);
-    const clickedDay = new Date(date).getDate();
-    const filteredHoursByDay = hourlyWeather?.filter(hour => {
-      return new Date(hour.time).getDate() === clickedDay;
-    });
-    setHourlyForecast(filteredHoursByDay);
-    setActiveCard(index);
-    ref.current?.scrollIntoView({ behavior: 'smooth' });
+    if (setHourlyForecast) {
+      setHourlyForecast([]);
+      const hourlyWeather = await getHourlyWeather(coordinates);
+      const clickedDay = new Date(date).getDate();
+      const filteredHoursByDay = hourlyWeather?.filter(hour => {
+        return new Date(hour.time).getDate() === clickedDay;
+      });
+      setHourlyForecast(filteredHoursByDay);
+      setActiveCard(index);
+      ref.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const toggleActiveStyles = (index: number): boolean => {

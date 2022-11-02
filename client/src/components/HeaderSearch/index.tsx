@@ -4,6 +4,7 @@ import SearchResultslist from 'components/SearchResultsList/SearchResultsList';
 import LocationContext from 'contexts/LocationContext';
 import React, { ChangeEvent, FC, useContext, useState } from 'react';
 import { VscSearch } from 'react-icons/vsc';
+import { isInputValid } from 'utils/stringCorrections';
 import styles from './styles.module.scss';
 
 const HeaderSearch: FC = () => {
@@ -20,7 +21,9 @@ const HeaderSearch: FC = () => {
   };
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setDisplaySearchResults(true);
-    setInputValue(event.target.value);
+    if (isInputValid(event.target.value)) {
+      setInputValue(event.target.value);
+    }
   };
   const handleResultSelected = () => {
     setCoordinates(null);
