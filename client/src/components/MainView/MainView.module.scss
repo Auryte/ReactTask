@@ -1,7 +1,8 @@
 @import '../../styles/variables.scss';
 
 .main {
-  height: 150vh;
+  min-height: fit-content;
+  // height: 150vh;
   width: 100%;
   padding: 20px;
   text-align: center;
@@ -20,7 +21,7 @@
 .backgroundImages {
   position: absolute;
   width: 100%;
-  height: 120%;
+  height: calc(100% + 260px);
   top: -260px;
   left: 0;
   background-size: cover;
@@ -42,7 +43,6 @@
 }
 
 .mainContainer {
-  position: absolute;
   width: calc(100% - 40px);
   top: 180px;
   left: 0;
@@ -51,6 +51,7 @@
   animation-fill-mode: forwards;
   z-index: 1;
   margin-left: 20px;
+  margin-top: 140px;
 }
 
 @keyframes datamover {
